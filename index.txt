@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendation System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0073e6;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        select:focus, input[type="submit"]:focus {
+            outline: none;
+            border-color: #0073e6;
+        }
+
+        input[type="submit"] {
+            background-color: #0073e6;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #005bb5;
+        }
+    </style>
+    <script>
+        async function updateLanguages() {
+            const topic = document.getElementById('topic').value;
+            const languageSelect = document.getElementById('language');
+
+            if (topic) {
+                const response = await fetch('/get_languages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic }),
+                });
+
+                const data = await response.json();
+
+                // Clear and update the language dropdown
+                languageSelect.innerHTML = '<option value="">Select language</option>';
+                data.languages.forEach(language => {
+                    const option = document.createElement('option');
+                    option.value = language;
+                    option.textContent = language;
+                    languageSelect.appendChild(option);
+                });
+            } else {
+                // Reset the language dropdown if no topic is selected
+                languageSelect.innerHTML = '<option value="">Select language</option>';
+            }
+        }
+    </script>
+</head>
+<body>
+    <form method="POST">
+        <h1>Book Recommendation Questionnaire</h1>
+        <!-- User Type Dropdown -->
+        <label for="user_type">Who are you?</label>
+        <select name="user_type" id="user_type" required>
+            <option value="">Select user</option>
+            <option value="student">Student</option>
+            <option value="employee">Employee</option>
+            <option value="teacher">Teacher</option>
+        </select>
+        <br>
+
+        <!-- Topic Dropdown -->
+        <label for="topic">Choose your topic of interest:</label>
+        <select name="topic" id="topic" required onchange="updateLanguages()">
+            <option value="">Select topic</option>
+            <option value="computer science">Computer Science</option>
+            <option value="mechanical">Mechanical</option>
+            <option value="electrical">Electrical</option>
+        </select>
+        <br>
+
+        <!-- Programming Language Dropdown (Dynamic) -->
+        <label for="language">Choose a programming language:</label>
+        <select name="language" id="language" required>
+            <option value="">Select language</option>
+        </select>
+        <br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
