@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookShelf - Search Books</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Previous styles remain the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat fixed;
+            padding: 0;
+            color: #4a4238;
+        }
+
+        /* Add a page wrapper for the gradient overlay */
+        .page-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(246, 239, 233, 0.95) 0%, rgba(243, 213, 181, 0.95) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(109, 76, 65, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Rest of the styles remain the same */
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #6d4c41;
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            color: #6d4c41;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(109, 76, 65, 0.1);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(109, 76, 65, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-form {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(109, 76, 65, 0.15);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-form:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #4a4238;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1rem;
+            color: #6d4c41;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        textarea, select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddbea9;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #6d4c41;
+            background-color: white;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236d4c41' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #b08968;
+            box-shadow: 0 0 0 4px rgba(176, 137, 104, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(109, 76, 65, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+
+            .main-content {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .search-form {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <nav class="nav">
+            <a href="#" class="logo">BookShelf</a>
+            <div class="user-menu">
+                <div class="user-avatar">VS</div>
+                <a href="{{ url_for('home') }}" class="back-btn">← Back to Dashboard</a>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <form class="search-form" method="POST" action="/search">
+                <h1>Search for Books</h1>
+                
+                <label for="query">Enter your query:</label>
+                <textarea 
+                    name="query" 
+                    id="query" 
+                    rows="3" 
+                    required 
+                    placeholder="What would you like to learn about?"
+                ></textarea>
+
+                <label for="topic">Select a topic:</label>
+                <select name="topic" id="topic" required>
+                    <option value="" disabled selected>Choose a topic</option>
+                    {% set topic_names = {'network': 'Network', 'dsa': 'Data Structure', 'python': 'Python', 'os': 'Operating System'} %}
+                    {% for key, name in topic_names.items() %}
+                        <option value="{{ key }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- <label for="preferred_by">Select your preference:</label>
+                <select name="preferred_by" id="preferred_by" required>
+                    <option value="" disabled selected>Choose your role</option>
+                    <option value="0">Student</option>
+                    <option value="1">Employee</option>
+                    <option value="2">Teacher</option>
+                    <option value="3">Independent Learner</option>
+                </select> -->
+
+                <button type="submit">Search Books</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

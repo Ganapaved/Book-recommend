@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Similar Books</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #005f80;
+            font-size: 2rem;
+        }
+
+        .books-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .book-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-card img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .book-card h3 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            color: #0083B0;
+        }
+
+        .book-card p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .book-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            background: #0083B0;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .book-card a:hover {
+            background: #005f80;
+        }
+
+        .no-books {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #777;
+        }
+
+        a.home-link {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 15px;
+            background: #005f80;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        a.home-link:hover {
+            background: #003f5c;
+        }
+    </style>
+</head>
+<body>
+    {% if title %}
+    <h1>Similar Books to "{{ title }}"</h1>
+    {% else %}
+    <h1>Similar books not found</h1>
+    {% endif %}
+    <div class="books-container">
+        {% if books is not none and not books.empty %}
+            {% for book in books.iterrows() %}
+                <div class="book-card">
+                    {% if book[1]['image'] %}
+                        <img src="{{ book[1]['image'] }}" alt="{{ book[1]['title'] }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x200?text=No+Image+Available" alt="No Image Available">
+                    {% endif %}
+                    <h3>{{ book[1]['title'] }}</h3>
+                    <p>Author: {{ book[1]['author'] }}</p>
+                    {% if 'pages' in book[1] %}
+                        <p>Pages: {{ book[1]['pages'] }}</p>
+                    {% endif %}
+                    {% if 'year' in book[1] %}
+                        <p>Year: {{ book[1]['year'] }}</p>
+                    {% endif %}
+                    
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-books">No similar books found.</p>
+        {% endif %}
+    </div>
+    <a href="/" class="home-link">Home</a>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookShelf - Recommended Books</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat fixed;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(246, 239, 233, 0.95) 0%, rgba(243, 213, 181, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+        }
+
+        .nav {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(109, 76, 65, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #6d4c41;
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            color: #6d4c41;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(109, 76, 65, 0.1);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(109, 76, 65, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(109, 76, 65, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #6d4c41;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .books-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(109, 76, 65, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(109, 76, 65, 0.2);
+        }
+
+        .book-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .book-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover .book-image img {
+            transform: scale(1.05);
+        }
+
+        .book-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #4a4238;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .book-info {
+            color: #6d4c41;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-info strong {
+            color: #4a4238;
+            font-weight: 600;
+        }
+
+        .book-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 1rem;
+            padding-top: 1.5rem;
+        }
+
+        .book-btn {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+            color: white;
+        }
+
+        .similar-btn {
+            background: rgba(109, 76, 65, 0.1);
+            color: #6d4c41;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 8px 20px rgba(109, 76, 65, 0.3);
+        }
+
+        .similar-btn:hover {
+            background: rgba(109, 76, 65, 0.2);
+        }
+
+        .no-books {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #6d4c41;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(109, 76, 65, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 1rem;
+            }
+
+            .nav {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .books-container {
+                gap: 1.5rem;
+            }
+
+            .book-card {
+                margin: 0;
+            }
+            .rating-comment-section {
+            display: none;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .show-rating-comment {
+            display: block;
+        }
+
+        .rating-comment-section form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rating-comment-section input,
+        .rating-comment-section textarea {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .rating-comment-section button {
+            padding: 0.8rem 1.5rem;
+            background-color: #6d4c41;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rating-comment-section button:hover {
+            background-color: #8e7a57;
+        }
+        .comments-panel {
+        position: fixed;
+        top: 0;
+        right: -25%;
+        width: 25%;
+        height: 100vh;
+        background: white;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease-in-out;
+        z-index: 1001;
+        overflow-y: auto;
+    }
+
+    .comments-panel.active {
+        right: 0;
+    }
+
+    .comments-header {
+        padding: 1rem;
+        background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+    }
+
+    .comments-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .close-comments {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .close-comments:hover {
+        transform: rotate(90deg);
+    }
+
+    .comments-content {
+        padding: 1rem;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    @media (max-width: 768px) {
+        .comments-panel {
+            width: 100%;
+            right: -100%;
+        }
+    }
+        }
+    </style>
+    <script>
+        function redirectToCommentPage(title) {
+            // URL encode the title to handle special characters
+            const encodedTitle = encodeURIComponent(title);
+            window.location.href = `/comment_page?title=${encodedTitle}`;
+        }
+    </script>
+    
+</head>
+<body>
+    <div class="page-wrapper">
+        <nav class="nav">
+            <a href="#" class="logo">BookShelf</a>
+            <div class="user-menu">
+                <div class="user-avatar">VS</div>
+                <a href="{{ url_for('home') }}" class="back-btn">← Back to Dashboard</a>
+            </div>
+        </nav>
+
+        <div class="header">
+            <h1>Recommended Books for You</h1>
+        </div>
+
+        <div class="books-container">
+            {% if not books.empty %}
+                {% for book in books.iterrows() %}
+                    <div class="book-card">
+                        <div class="book-image">
+                            {% if book[1]['image'] %}
+                            <a href="rating_comments.html??title={{ book[1]['title'] }}">
+                                <img  src="{{book[1]['image']}}" alt="{{ book[1]['title'] }}" 
+                                nclick="redirectToCommentPage('{{ book[1]['title'] }}')"
+                                style="cursor:pointer;" />
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x300?text=No+Image+Available" alt="No Image Available">
+                            {% endif %}
+                            </a>
+                        </div>
+                        <div class="book-content">
+                            <h3 class="book-title">{{ book[1]['title'] }}</h3>
+                            <p class="book-info"><strong>Author:</strong> {{ book[1]['author'] }}</p>
+                            {% if book[1].get('pages') %}
+                                <p class="book-info"><strong>Pages:</strong> {{ book[1]['pages'] }}</p>
+                            {% endif %}
+                            {% if book[1].get('year') %}
+                                <p class="book-info"><strong>Year:</strong> {{ book[1]['year'] }}</p>
+                            {% endif %}
+                            <div class="book-actions">
+                                {% if book[1].get('pdf_link') %}
+                                    <a href="{{ book[1]['pdf_link'] }}" target="_blank" class="book-btn download-btn">Download Book</a>
+                                {% endif %}
+                                <a href="/similar_books/{{ topic }}/{{ book[1]['title'] }}" class="book-btn similar-btn">Similar Books</a>
+                                <form action="{{ url_for('comments_page') }}" method="GET" style="margin-top: 10px;">
+                                    <input type="hidden" name="title" value="{{ book[1]['title'] }}">
+                                    <button type="submit" class="open_comments"
+                                            style="cursor: pointer; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px;">
+                                        Add/View Comments
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-books">No books found for the selected topic.</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function toggleRatingCommentSection(bookId) {
+            const section = document.getElementById('rating-comment-' + bookId);
+            section.classList.toggle('show-rating-comment');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments for {{ title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f6efe9 0%, #f3d5b5 100%);
+            color: #4a4238;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(109, 76, 65, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #6d4c41;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(109, 76, 65, 0.1);
+            padding-bottom: 1rem;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: #6d4c41;
+            margin: 2rem 0 1rem;
+            font-weight: 600;
+        }
+
+        .comments-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .comment-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(109, 76, 65, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(109, 76, 65, 0.1);
+        }
+
+        .comment-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(109, 76, 65, 0.12);
+        }
+
+        .comment-timestamp {
+            display: block;
+            font-size: 0.85rem;
+            color: #8b6b61;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .comment-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4a4238;
+        }
+
+        .no-comments {
+            color: #6d4c41;
+            font-style: italic;
+            background: rgba(109, 76, 65, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px dashed rgba(109, 76, 65, 0.2);
+        }
+
+        .comment-form {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(109, 76, 65, 0.08);
+            border: 1px solid rgba(109, 76, 65, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(109, 76, 65, 0.2);
+            border-radius: 12px;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 1.5rem;
+            background: white;
+            min-height: 120px;
+            font-size: 1rem;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #b08968;
+            box-shadow: 0 0 0 4px rgba(176, 137, 104, 0.1);
+        }
+
+        textarea::placeholder {
+            color: #8b6b61;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #b08968 0%, #6d4c41 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(109, 76, 65, 0.2);
+        }
+
+        .submit-button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .submit-button:hover svg {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .comment-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Comments for "{{ title }}"</h1>
+
+        <!-- Display Existing Comments -->
+        <div>
+            <h3>All Comments</h3>
+            <ul class="comments-list">
+                {% if comments %}
+                    {% for comment in comments %}
+                    <li class="comment-item">
+                        <span class="comment-timestamp">{{ comment.timestamp }}</span>
+                        <p class="comment-content">{{ comment.content }}</p>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-comments">No comments yet. Be the first to share your thoughts!</p>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Add a New Comment -->
+        <div>
+            <h3>Add a Comment</h3>
+            <form class="comment-form" action="{{ url_for('comments_page', title=title) }}" method="POST">
+                <textarea 
+                    name="comment" 
+                    rows="4" 
+                    placeholder="Share your thoughts about this book..." 
+                    required
+                ></textarea>
+                <button type="submit" class="submit-button">
+                    Submit Comment
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
