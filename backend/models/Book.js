@@ -27,7 +27,10 @@ const bookschema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User',
         default : []
-    }]
+    }],
+    photo :{
+        type : String
+    }
 },
 {timestamps : true}
 );

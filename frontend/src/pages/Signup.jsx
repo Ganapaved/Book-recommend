@@ -27,14 +27,32 @@ export default function Signup({onSignup}) {
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>Signup</h2>
-      <input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password"
-             value={passwordHash} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Signup</button>
-    </form>
-  );
+return (
+  <form className="signup-form" onSubmit={handleSubmit}>
+    <h2 className="signup-title">Signup</h2>
+    <input
+      className="signup-input"
+      placeholder="Username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      required
+    />
+    <input
+      className="signup-input"
+      placeholder="Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+    />
+    <input
+      className="signup-input"
+      type="password"
+      placeholder="Password"
+      value={passwordHash}
+      onChange={(e) => setPassword(e.target.value)}
+      required
+    />
+    <button className="signup-btn" type="submit">Signup</button>
+  </form>
+);
 }

@@ -9,6 +9,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Recommendations from "./pages/Recommendations";
 import Profile from "./pages/Profile";
+import Bookpreview from './pages/Bookpreview'
+import BookChatbot from "./pages/Bookchatbot";
 import { authFetch } from "./utils/api";
 
 export default function App() {
@@ -76,6 +78,8 @@ export default function App() {
         <Route path="/login" element={<Login onLogin={onLogin} />} />
         <Route path="/recommend" element={<Recommendations />} />
         <Route path="/profile" element ={token ? <Profile/> : <Navigate to='/login' replace />}/>
+        <Route path="/book/:id" element={token ? <Bookpreview/> : <Navigate to='/login' replace />}/>
+        <Route path="/bookai/:title" element ={<BookChatbot/>}></Route>
       </Routes>
     </div>
   );

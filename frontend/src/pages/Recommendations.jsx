@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../utils/api";
+import {Link} from 'react-router-dom';
 
 export default function Recommendations() {
   const [books, setBooks] = useState([]);
@@ -46,22 +47,34 @@ export default function Recommendations() {
     }
   };
 
-  return (
-    <div>
-      <h2>Recommended Books</h2>
-      <ul>
-        {books.map((b) => (
-          <li key={b._id} style={{ marginBottom: "1rem" }}>
-            <span>{b.title} by {b.author}</span>
+return (
+  <div className="recommend-container">
+    <h2>Recommended Books</h2>
+    <div className="recommend-list">
+      {books.map((b) => (
+        <div className="recommend-card" key={b._id}>
+          <Link to={`/book/${b._id}`}>
+            <img
+              className="recommend-img"
+              src={`data:image/jpeg;base64,${b.photo}`}
+              alt='image'
+            />
+          </Link>
+          <div className="recommend-info">
+            <div className="recommend-title">{b.title}</div>
+            <div className="recommend-author">by {b.author}</div>
             <button
+              className={`recommend-like ${likedSet.has(b._id) ? "liked" : ""}`}
               onClick={() => toggleLike(b._id)}
-              style={{ marginLeft: "1rem" }}
             >
               {likedSet.has(b._id) ? "❤️ Liked" : "🤍 Like"}
             </button>
-          </li>
-        ))}
-      </ul>
+          </div>
+        </div>
+      ))}
     </div>
-  );
+  </div>
+);
 }
+
+import '../App.css'

@@ -5,10 +5,10 @@ export default function Navbar({ user, onLogout }) {
     <nav className="navbar">
       <Link to="/">📚 BookRec</Link>
       <div>
-        <Link to="/search">Search</Link>
-        <Link to="/recommend">Recommendations</Link>
+        <Link to="/search">Search 🔎</Link>
         {user ? (
           <>
+            <Link to="/recommend">Recommendations</Link>
             <Link to="/likes">My Likes</Link>
             <Link to="/add">Add Book</Link>
             <Link to="/profile">{user.username}</Link>

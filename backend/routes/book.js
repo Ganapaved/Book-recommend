@@ -1,8 +1,15 @@
 const {Router} =require('express');
 
 const Books =require( "../models/Book");
+const multer = require('multer');
 
 const router = Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
+});
 
 router.get('/', async (req, res) => {
   try {
@@ -26,14 +33,29 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id',async (req,res)=>{
+  try{
+    const book_id = req.params.id;
+    const book_present = await Books.findById(book_id);
+    // console.log('Book',book_present);
+    
+    res.status(200).json({book_present});
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json(err);
+  }
+})
 
-router.post('/add',async (req,res)=>{
+router.post('/add',upload.single('photo'),async (req,res)=>{
     try{
         const {title,author,genres =[],description='',userId} = req.body;
         if(!title || !author)
             res.status(400).json({error  : "title and author are required"});
+        const photobase64 = req.file ? req.file.buffer.toString('base64') : null;
     
-        const book = await Books.create({title,author,genres,description,addedBy: userId});
+        const newbook = await Books({title,author,genres,description,addedBy: userId , photo:photobase64});
+        const book = await newbook.save();
         res.status(201).json({message : "Book added successfully", book});
     }
     catch(err){

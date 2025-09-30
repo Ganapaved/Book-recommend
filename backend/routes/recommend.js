@@ -30,7 +30,7 @@ router.get('/', jwtAuthmiddleware, async (req, res) => {
     let contentIds = [];
     if (liked.length) {
       const { similar } = await getSimilarFromPython(
-        process.env.PY_ML_URL || 'http://localhost:8000',
+         'http://127.0.0.1:8000',
         liked,
         50
       );
@@ -47,7 +47,7 @@ router.get('/', jwtAuthmiddleware, async (req, res) => {
 
     // fallback random books if not enough
     const topN = 20; // you can tune this
-    if (merged.length < topN) {
+    if (topN > merged.length) {
       const need = topN - merged.length;
       const randoms = await Books.aggregate([
         { $match: { _id: { $nin: merged.map(id => new mongoose.Types.ObjectId(id)) } } },
