@@ -37,7 +37,9 @@ Ensure you have:
 Contributions are welcome! Feel free to fork the repository and submit a pull request.  
 
 ## 📩 Contact  
-- **GitHub** – [Ganapaved](https://github.com/Ganapaved)  
+- **GitHub** – [Ganapaved](https://github.com/Ganapaved)
+- **GitHub** – [VarunD27](https://github.com/VarunD27)
+  
 
   
 
