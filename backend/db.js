@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const mongourl = 'mongodb://127.0.0.1:27017/Book_recommend'
+const mongourl = process.env.MONGODB_URL
 
 // const mongourl = process.env.DB_URL;
 mongoose.connect(mongourl)

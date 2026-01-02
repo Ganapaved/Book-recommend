@@ -12,9 +12,8 @@ const upload = multer({
 });
 
 // ---------- MongoDB ----------
-const mongourl =
-  process.env.DB_URL ||
-  "mongodb+srv://vedanmoolya:mypassword1998@cluster0.zr2m37c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+const mongourl = process.env.DB_URL 
 
 const client = new MongoClient(mongourl);
 let db, chunkscollection;
@@ -29,10 +28,11 @@ let db, chunkscollection;
 })();
 
 // ---------- Gemini ----------
+
 const genAI = new GoogleGenerativeAI(
-  process.env.API_KEY || "AIzaSyClm340-JSmHjqshhcxdCF8EwCczkAbHD8"
+  process.env.API_KEY 
 );
-const model = genAI.getGenerativeModel({ model: "models/gemini-flash-latest" });
+const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash" });
 
 // ---------- Embedding Model (dynamic import) ----------
 let embedder;
@@ -124,7 +124,7 @@ router.post("/chat", async (req, res) => {
             path: "embedding",
             queryVector: embedding,
             numCandidates: 100,
-            limit: 5,
+            limit:3,
           },
         },
         {
